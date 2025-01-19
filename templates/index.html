@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LanceDB Image Search</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            margin: 20px auto;
+            padding: 20px;
+            max-width: 400px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        form h2 {
+            margin-bottom: 15px;
+        }
+        form input[type="text"], form input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        form button {
+            padding: 10px 15px;
+            background: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        form button:hover {
+            background: #0056b3;
+        }
+        .results {
+            max-width: 800px;
+            margin: 40px auto;
+            text-align: center;
+        }
+        .results h2 {
+            color: #333;
+        }
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .image-grid img {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+        .image-grid img:hover {
+            transform: scale(1.05);
+        }
+        .no-results {
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>LanceDB Image Search</h1>
+
+    <!-- Upload Form -->
+    <!-- <form action="/upload/" method="post" enctype="multipart/form-data">
+        <h2>Upload Image</h2>
+        <input type="file" name="file" accept="image/*" required>
+        <button type="submit">Upload</button>
+    </form> -->
+
+    <!-- Search Form -->
+    <form id="search-form">
+        <h2>Search Images</h2>
+        <input type="text" name="query" id="query" placeholder="Enter a search query" required>
+        <button type="submit">Search</button>
+    </form>
+
+    <!-- Search Results -->
+    <div class="results">
+        <h2>Search Results</h2>
+        <div id="result-container" class="image-grid"></div>
+    </div>
+    <div id="loading" style="display: none; text-align: center; margin-top: 20px;">
+        <p>Loading...</p>
+    </div>
+    
+
+    <script>
+        const searchForm = document.getElementById("search-form");
+        const resultContainer = document.getElementById("result-container");
+        const loadingIndicator = document.getElementById("loading");
+    
+        searchForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+    
+            // Show the loading indicator and clear the results container
+            loadingIndicator.style.display = "block";
+            resultContainer.innerHTML = "";
+    
+            try {
+                const formData = new FormData(searchForm);
+                const response = await fetch("/search/", {
+                    method: "POST",
+                    body: new URLSearchParams(formData)
+                });
+    
+                const data = await response.json();
+    
+                // Hide the loading indicator
+                loadingIndicator.style.display = "none";
+    
+                // Display the results
+                if (data.results && data.results.length) {
+                    data.results.forEach((uri) => {
+                        const img = document.createElement("img");
+                        img.src = `/${uri}`;
+                        img.alt = "Search result image";
+                        resultContainer.appendChild(img);
+                    });
+                } else {
+                    resultContainer.innerHTML = "<p class='no-results'>No results found</p>";
+                }
+            } catch (error) {
+                // Hide the loading indicator and show an error message
+                loadingIndicator.style.display = "none";
+                resultContainer.innerHTML = "<p class='no-results'>An error occurred. Please try again.</p>";
+            }
+        });
+    
+        // Allow pressing Enter to submit the form
+        const queryInput = document.getElementById("query");
+        queryInput.addEventListener("keypress", (event) => {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                searchForm.dispatchEvent(new Event("submit"));
+            }
+        });
+    </script>
+    
+</body>
+</html>

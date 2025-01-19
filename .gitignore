@@ -1,0 +1,5 @@
+db.lance
+__pycache__
+*.pyc
+*.pyo
+venv
