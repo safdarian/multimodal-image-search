@@ -12,7 +12,7 @@ class lanceDB_manager:
     def __init__(self) -> None:
         self.db = lancedb.connect(tmp_path)
         self.func_image = get_registry().get("open-clip").create()
-        self.func_text = get_registry().get("sentence-transformers").create(name="BAAI/bge-small-en-v1.5", device="cuda")
+        # self.func_text = get_registry().get("sentence-transformers").create(name="BAAI/bge-small-en-v1.5", device="cuda")
 
         class Images(LanceModel):
             # label: str  = self.func_text.SourceField()
