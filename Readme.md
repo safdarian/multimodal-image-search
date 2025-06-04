@@ -35,7 +35,7 @@ Ensure you have the following installed on your system:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-repo/multimodal-image-search.git
+   git clone https://github.com/safdarian/multimodal-image-search.git
    cd multimodal-image-search
    ```
 
