@@ -1,4 +1,5 @@
 # Multimodal Image Search
+![screenshot of a sample search for red cars](screen.png)
 
 **Multimodal Image Search** is a web-based application that allows users to search for images using text queries. The project leverages advanced AI models such as CLIP and Sentence Transformers to provide highly relevant image search results.
 
